@@ -1,0 +1,15 @@
+body{
+    background-color: black;
+    margin:20px;
+}
+.chat
+{   background-color: white;
+    margin: 20px;
+    padding: 10px;
+    display: inline-block;
+}
+.msg
+{
+    background-color: bisque;
+    font-style: italic;
+}

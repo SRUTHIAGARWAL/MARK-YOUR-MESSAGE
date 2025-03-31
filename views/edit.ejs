@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDIT ROUTE</title>
+</head>
+<body>
+    <h1>EDIT YOUR POST <%= chat.from %></h1>
+    <p>This post was created by <%= chat.from %> with an id <%= chat._id %> and sent to <%= chat.to %> with a message <%= chat.msg %> </p>
+    <form method="POST" action="/chat/<%= chat._id %>?_method=PUT">
+        <!-- <input placeholder="Who are you?" name="from" type="text">
+        <br><br/> -->
+        <textarea placeholder="<%= chat.msg %>" name="msg" >
+        </textarea>
+        <br><br>
+        <!-- <input placeholder="Whom do you want to send" name="to" type="text">
+        <br><br> -->
+        <form>
+            <button class="but">EDIT </button>
+        </form>
+    </form>
+</body>
+</html>
