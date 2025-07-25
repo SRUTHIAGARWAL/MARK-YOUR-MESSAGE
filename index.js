@@ -23,26 +23,29 @@ main().then(() => console.log("connection is succesfull")).catch(err => console.
 // });
 // chat1.save().then((res)=>{console.log(res);}).catch((err)=>console.log(err));
 //index route
-app.get("/chat",async (req,res,next)=>{
-    try{
+
+function asyncWrap(fn)
+{
+    return function(req,res,next)
+    {
+        fn(req,res,next).catch((err)=>next(err));
+    }
+}
+
+app.get("/chat",asyncWrap(async (req,res,next)=>{
     let chats=await Chat.find({});
     // console.log(chats);
     res.render("index.ejs",{chats});
     }
-    catch(err)
-    {
-        next(err);
-    }
-});
+));
 //new post get request
 app.get("/chat/new", (req,res)=>
     {   
         res.render("new.ejs");
     });
 //post request of new created post
-app.post("/chat",async(req,res,next)=>
+app.post("/chat",asyncWrap(async(req,res,next)=>
 {
-    try{
          let {from,msg,to}=req.body;
     let newChat=new Chat(
         {
@@ -55,54 +58,33 @@ app.post("/chat",async(req,res,next)=>
      await newChat.save()
      res.redirect("/chat");
     }
-    catch(err)
-    {
-        next(err);
-    }
-});
+));
 //edit route
-app.get("/chat/:id/edit",async (req,res,err)=>{
-   try{
+app.get("/chat/:id/edit",asyncWrap(async (req,res,err)=>{
      let {id}=req.params;
     let chat= await Chat.findById(id);
     res.render("edit.ejs",{chat});
-   }
-   catch(err)
-   {
-    next(err);
-   }
-});
+   }));
 // edit post route
-app.put("/chat/:id",async (req,res,next)=>{
-    try{
+app.put("/chat/:id",asyncWrap(async (req,res,next)=>{
         let {id}=req.params;
     let {msg: newmsg}=req.body;
     let updatedChat = await Chat.findByIdAndUpdate(id, {msg:newmsg},{runValidator : true , new: true});
     console.log(updatedChat);
     res.redirect("/chat");
     }
-    catch(err)
-    {
-        next(err);
-    }
-});
+));
 
 //delete route
-app.delete("/chat/:id/delete", async(req,res,next)=>{
-    try{
+app.delete("/chat/:id/delete", asyncWrap(async(req,res,next)=>{
     let {id}=req.params;
     let chat = await Chat.findByIdAndDelete(id);
     res.redirect("/chat");
     }
-    catch(err)
-    {
-        next(err);
-    }
-});
+));
 
 //show route
-app.get("/chat/:id/show",async(req,res,next)=>{
-    try{
+app.get("/chat/:id/show",asyncWrap(async(req,res,next)=>{
      let {id}=req.params;
     let chat= await Chat.findById(id);
     if(!chat)
@@ -111,11 +93,7 @@ app.get("/chat/:id/show",async(req,res,next)=>{
     }
     res.render("show.ejs",{chat});
     }
-    catch(err)
-    {
-        next(err);
-    }
-})
+));
 
 //root rounte
 app.get("/", (req,res)=>{
